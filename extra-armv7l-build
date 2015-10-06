@@ -251,7 +251,7 @@ makechrootpkg_args=(-c -n)
 cmd="${0##*/}"
 if [[ "${cmd%%-*}" == 'multilib' ]]; then
 	repo="${cmd%-build}"
-	arch='armv7h'
+	arch='armv7l'
 	base_packages+=(multilib-devel)
 else
 	tag="${cmd%-build}"
