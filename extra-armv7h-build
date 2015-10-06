@@ -251,7 +251,7 @@ makechrootpkg_args=(-c -n)
 cmd="${0##*/}"
 if [[ "${cmd%%-*}" == 'multilib' ]]; then
 	repo="${cmd%-build}"
-	arch='armv7l'
+	arch='armv7h'
 	base_packages+=(multilib-devel)
 else
 	tag="${cmd%-build}"
@@ -305,8 +305,12 @@ if ${clean_first} || [[ ! -d "${chroots}/${repo}-${arch}" ]]; then
 
 	rm -rf --one-file-system "${chroots}/${repo}-${arch}"
 	mkdir -p "${chroots}/${repo}-${arch}"
-	setarch "${arch}" mkarchroot \
-		-C "/usr/share/devtools/pacman-${repo}.conf" \
+	if [[ "${arch}" == "armv7h" ]]; then
+		setarch "armv7l"
+	else
+		setarch "${arch}"
+	fi
+	mkarchroot -C "/usr/share/devtools/pacman-${repo}.conf" \
 		-M "/usr/share/devtools/makepkg-${arch}.conf" \
 		"${chroots}/${repo}-${arch}/root" \
 		"${base_packages[@]}" || abort
