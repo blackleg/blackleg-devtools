@@ -255,8 +255,10 @@ if [[ "${cmd%%-*}" == 'multilib' ]]; then
 	base_packages+=(multilib-devel)
 else
 	tag="${cmd%-build}"
-	repo=${tag%-*}
-	arch=${tag##*-}
+	#repo=${tag%-*}
+	#arch=${tag##*-}
+	repo='armv7h'
+	arch='armv7h'
 fi
 chroots='/var/lib/archbuild'
 clean_first=false
@@ -305,12 +307,7 @@ if ${clean_first} || [[ ! -d "${chroots}/${repo}-${arch}" ]]; then
 
 	rm -rf --one-file-system "${chroots}/${repo}-${arch}"
 	mkdir -p "${chroots}/${repo}-${arch}"
-	if [[ "${arch}" == "armv7h" ]]; then
-		setarch "armv7l"
-	else
-		setarch "${arch}"
-	fi
-	mkarchroot -C "/usr/share/devtools/pacman-${repo}.conf" \
+	setarch "armv7l" mkarchroot -C "/usr/share/devtools/pacman-${repo}.conf" \
 		-M "/usr/share/devtools/makepkg-${arch}.conf" \
 		"${chroots}/${repo}-${arch}/root" \
 		"${base_packages[@]}" || abort
